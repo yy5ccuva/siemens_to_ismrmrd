@@ -51,7 +51,7 @@ if (WIN32)
 else()
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11")
 endif()
-
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSUPPORT_PMU_PT")
 # Added for static linking!!!
 if (BUILD_DYNAMIC)
     set(Boost_USE_STATIC_LIBS OFF)
