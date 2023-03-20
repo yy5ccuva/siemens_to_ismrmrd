@@ -809,7 +809,13 @@ int main(int argc, char* argv[]) {
         {
             isNX = true;
         }
-
+// add special settings for XA50 or above to handle new waveform format of physio data
+if (software_version.find("syngo MR XA50") != std::string::npos )
+        {
+            #ifndef SUPPORT_PMU_PT
+            #define SUPPORT_PMU_PT 1
+            #endif
+        }
         std::cout << "Dwell time: " << dwell_time_0 << std::endl;
 
         if (debug_xml) {
@@ -1326,6 +1332,20 @@ void makeWaveformHeader(ISMRMRD::IsmrmrdHeader &header) {
             info.waveformName = "EXT2";
             info.waveformType = ISMRMRD::WaveformType::OTHER;
             header.waveformInformation.push_back(info);
+
+#ifdef SUPPORT_PMU_PT
+            info.waveformName = "EVENTS";
+            info.waveformType = ISMRMRD::WaveformType::OTHER;
+            header.waveformInformation.push_back(info);
+
+            info.waveformName = "PTC";
+            info.waveformType = ISMRMRD::WaveformType::OTHER;
+            header.waveformInformation.push_back(info);
+
+            info.waveformName = "PTR";
+            info.waveformType = ISMRMRD::WaveformType::OTHER;
+            header.waveformInformation.push_back(info);
+#endif
         }
 
     }
@@ -1340,7 +1360,14 @@ const std::map<PMU_Type, int> waveformId = {{PMU_Type::ECG1, 0},
                                             {PMU_Type::PULS, 1},
                                             {PMU_Type::RESP, 2},
                                             {PMU_Type::EXT1, 3},
-                                            {PMU_Type::EXT2, 4}};
+                                            {PMU_Type::EXT2, 4}
+#ifdef SUPPORT_PMU_PT
+                                            ,
+                                            {PMU_Type::EVENTS, 5},
+                                            {PMU_Type::PTC, 6},
+                                            {PMU_Type::PTR, 7}
+#endif
+};
 
 //It appears Siemens hard-codes sample times for their PMU systems, which sounds suspicious
 //const std::map<PMU_Type, float> sample_time_us = {{PMU_Type::ECG1,2500},{PMU_Type::ECG2,2500},{PMU_Type::ECG3,2500},{PMU_Type::ECG4,2500},
@@ -1350,7 +1377,11 @@ const std::map<PMU_Type, int> waveformId = {{PMU_Type::ECG1, 0},
 //                                               {PMU_Type::EXT2,20000}};
 
 std::set<PMU_Type> PMU_Types = {PMU_Type::ECG1, PMU_Type::ECG2, PMU_Type::ECG3, PMU_Type::ECG4, PMU_Type::PULS,
-                                PMU_Type::RESP, PMU_Type::EXT1, PMU_Type::EXT2, PMU_Type::END};
+                                PMU_Type::RESP, PMU_Type::EXT1, PMU_Type::EXT2,
+#ifdef SUPPORT_PMU_PT
+                                PMU_Type::EVENTS, PMU_Type::PTC, PMU_Type::PTR,
+#endif
+                                PMU_Type::END};
 
 std::vector<ISMRMRD::Waveform> readSyncdata(std::ifstream &siemens_dat, bool VBFILE, unsigned long acquisitions,
                                             uint32_t dma_length, sScanHeader scanheader, ISMRMRD::IsmrmrdHeader &header,
@@ -1392,8 +1423,12 @@ std::vector<ISMRMRD::Waveform> readSyncdata(std::ifstream &siemens_dat, bool VBF
         siemens_dat.read((char *) &swappedFlag, sizeof(uint32_t));
         siemens_dat.read((char *) &timestamp0, sizeof(uint32_t));
         siemens_dat.read((char *) &timestamp, sizeof(uint32_t));
-        siemens_dat.read((char *) &packerNr, sizeof(uint32_t));
+        siemens_dat.read((char *) &packerNr, sizeof(uint32_t));   
         siemens_dat.read((char *) &duration, sizeof(uint32_t));
+
+#ifdef SUPPORT_PMU_PT
+        duration = duration % 65536;
+#endif
 
         PMU_Type magic;
         siemens_dat.read((char *) &magic, sizeof(uint32_t));
