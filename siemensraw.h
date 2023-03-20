@@ -19,7 +19,7 @@
 #define MDH_ENABLE_FLAGS_MASK (0xFC000000L)
 #define MDH_SYNCDATA (0x00000020L)
 
-enum class PMU_Type
+enum class PMU_Type :unsigned int
 {
 // Add support for PMU reading for Pilotone sensors starting from IDEA XA50
 #ifndef SUPPORT_PMU_PT
