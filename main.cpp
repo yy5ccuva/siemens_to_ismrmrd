@@ -809,12 +809,12 @@ int main(int argc, char* argv[]) {
         {
             isNX = true;
         }
-// add special settings for XA50 or above to handle new waveform format of physio data
-if (software_version.find("syngo MR XA50") != std::string::npos )
+        // add special settings for XA50 or above to handle new waveform format of physio data
+        if (software_version.find("syngo MR XA50") != std::string::npos)
         {
-            #ifndef SUPPORT_PMU_PT
-            #define SUPPORT_PMU_PT 1
-            #endif
+#ifndef SUPPORT_PMU_PT
+#define SUPPORT_PMU_PT 1
+#endif
         }
         std::cout << "Dwell time: " << dwell_time_0 << std::endl;
 
@@ -923,8 +923,9 @@ if (software_version.find("syngo MR XA50") != std::string::npos )
 
                 //This means we should only create XML header and exit
                 if (header_only) {
-                    std::ofstream header_out_file(ismrmrd_file.c_str());
-                    header_out_file << xml_config;
+                    //std::ofstream header_out_file(ismrmrd_file.c_str());
+                    //header_out_file << xml_config;
+                    ismrmrd_dataset->writeHeader(xml_config);
                     return -1;
                 }
 
