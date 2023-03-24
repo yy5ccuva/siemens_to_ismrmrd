@@ -82,6 +82,8 @@
 
         <!-- studyInformationType --> 
         <p><s>IRIS.RECOMPOSE.StudyLOID</s>                                      <d>siemens.IRIS.RECOMPOSE.StudyLOID</d></p>
+        <p><s>IRIS.RECOMPOSE.tStudyDescription</s>                              <d>siemens.IRIS.RECOMPOSE.tStudyDescription</d></p>
+        <p><s>DICOM.tBodyPartExamined</s>                                       <d>siemens.DICOM.tBodyPartExamined</d></p>
         <!-- measurementInformationType --> 
         <p><s>HEADER.MeasUID</s>                                                <d>siemens.HEADER.MeasUID</d></p>
         <p><s>YAPS.tPatientPosition</s>                                         <d>siemens.YAPS.tPatientPosition</d></p>

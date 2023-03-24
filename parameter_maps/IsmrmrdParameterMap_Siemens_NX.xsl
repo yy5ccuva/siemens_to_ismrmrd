@@ -69,7 +69,7 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-            <!--
+            
             <subjectInformation>
                 <patientName>
                     <xsl:value-of select="siemens/DICOM/tPatientName"/>
@@ -92,12 +92,17 @@
             </subjectInformation>
 
             <studyInformation>
-            <studyInstanceUID>
+                <studyInstanceUID>
                     <xsl:value-of select="$studyID" />
                 </studyInstanceUID>
-
+                <studyDescription>
+                    <xsl:value-of select="siemens/IRIS/RECOMPOSE/tStudyDescription"/>
+                </studyDescription>
+                <bodyPartExamined>
+                    <xsl:value-of select="siemens/DICOM/tBodyPartExamined"/>
+                </bodyPartExamined>
             </studyInformation>
-            -->
+            
 
             <measurementInformation>
                 <measurementID>
@@ -109,7 +114,6 @@
                 <protocolName>
                     <xsl:value-of select="siemens/MEAS/tProtocolName"/>
                 </protocolName>
-
                 <xsl:if test="siemens/YAPS/ReconMeasDependencies/RFMap > 0">
                     <measurementDependency>
                         <dependencyType>RFMap</dependencyType>

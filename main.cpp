@@ -1690,7 +1690,9 @@ std::string readXmlConfig(bool debug_xml, const std::string &parammap_file_conte
     long iNoOfFourierPartitions = 0;
     std::string seqString;
     for (unsigned int b = 0; b < num_buffers; b++) {
-        if (buffers[b].name.compare("Meas") != 0) continue;
+        //if (buffers[b].name.compare("Meas") != 0) continue;
+        //Switch to Protocol will avoid some empty entries from Meas buffer
+        if (buffers[b].name.compare("Protocol") != 0) continue;
 
 
         std::string config_buffer = std::string(&buffers[b].buf[0], buffers[b].buf.size() - 2);
